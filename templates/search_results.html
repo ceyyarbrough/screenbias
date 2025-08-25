@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Search Results</h1>
+
+{% if error %}
+<p class="text-danger">Error: {{ error }}</p>
+{% elif results %}
+<table class="table table-striped" id="results-table">
+    <thead>
+        <tr>
+            <th>Poster</th>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in results %}
+        <tr data-id="{{ result.imdbID }}">
+            <td>
+                <img src="{{ result.Poster }}" alt="Poster for {{ result.Title }}" style="width: 100px;">
+            </td>
+            <td>{{ result.Title }}</td>
+            <td>{{ result.Year }}</td>
+            <td>{{ result.Type }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No results found.</p>
+{% endif %}
+
+<script>
+    // Add a click event listener to the table rows
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('results-table');
+        table.addEventListener('click', function (event) {
+            const row = event.target.closest('tr'); // Get the clicked row
+            if (row && row.dataset.id) {
+                const movieId = row.dataset.id; // Extract the movie ID
+                // Redirect to the details page for the selected movie
+                window.location.href = `/details/${movieId}`;
+            }
+        });
+    });
+</script>
+
+{% endblock %}
