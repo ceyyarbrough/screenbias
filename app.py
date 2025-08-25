@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, abort
 import requests
+import os
 
 app = Flask(__name__)
 
-OMDB_API_KEY = ''
+OMDB_API_KEY = os.getenv('OMDB_API_KEY')
 
 @app.route('/')
 @app.route('/home')

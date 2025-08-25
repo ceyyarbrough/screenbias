@@ -33,9 +33,9 @@ Before running the application, ensure you have the following installed:
     ```
 4. Set Up the OMDB API Key:
     - Sign up for an API key at OMDb API.
-    - Open `app.py` and set the `OMDB_API_KEY` variable with your API key:
+    - Set the `OMDB_API_KEY` variable with your API key:
         ```bash
-        OMDB_API_KEY = 'your_api_key_here'
+        export OMDB_API_KEY="your_api_key_here"
         ```
 
 ## Usage
