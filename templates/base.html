@@ -12,32 +12,78 @@
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">ScreenBias</a>
+    <a class="navbar-brand" href="/home">ScreenBias</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/login.html">Login <span class="sr-only"></span></a>
+      <ul class="navbar-nav mx-auto">
+        <!-- Movies Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="moviesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Movies
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="moviesDropdown">
+            <li><a class="dropdown-item" href="/movies/rightwing">Right Wing</a></li>
+            <li><a class="dropdown-item" href="/movies/leftwing">Left Wing</a></li>
+            <li><a class="dropdown-item" href="/movies/center">Center</a></li>
+          </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/right.html">Right Wing Films</a>
+        <!-- TV Shows/Series Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="tvDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            TV Shows/Series
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="tvDropdown">
+            <li><a class="dropdown-item" href="/tv/rightwing">Right Wing</a></li>
+            <li><a class="dropdown-item" href="/tv/leftwing">Left Wing</a></li>
+            <li><a class="dropdown-item" href="/tv/center">Center</a></li>
+          </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/left.html">Left Wing Films</a>
+        <!-- Actors Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="actorsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Actors
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="actorsDropdown">
+            <li><a class="dropdown-item" href="/actors/rightwing">Right Wing</a></li>
+            <li><a class="dropdown-item" href="/actors/leftwing">Left Wing</a></li>
+            <li><a class="dropdown-item" href="/actors/center">Center</a></li>
+          </ul>
         </li>
+        <!-- Directors Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="directorsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Directors
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="directorsDropdown">
+            <li><a class="dropdown-item" href="/directors/rightwing">Right Wing</a></li>
+            <li><a class="dropdown-item" href="/directors/leftwing">Left Wing</a></li>
+            <li><a class="dropdown-item" href="/directors/center">Center</a></li>
+          </ul>
+        </li>
+        <!-- Stats Button -->
         <li class="nav-item">
-          <a class="nav-link" href="/center.html">Centrist Films</a>
+          <a class="nav-link" href="/stats">Stats</a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0" action="/search" method="get">
-        <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search for Films"
-          aria-label="Search" required>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <form class="d-flex mx-auto" style="width: 400px;" action="/search" method="get">
+        <input class="form-control me-2" type="search" name="query" placeholder="Search for Films" aria-label="Search" required>
+        <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
+      <ul class="navbar-nav ms-auto">
+        {% if session.get('username') %}
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout ({{ session['username'] }})</a>
+        </li>
+        {% else %}
+        <li class="nav-item active">
+          <a class="nav-link" href="/login">Login <span class="sr-only"></span></a>
+        </li>
+        {% endif %}
+      </ul>
     </div>
   </nav>
 
