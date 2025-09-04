@@ -6,7 +6,7 @@ from flask import render_template, session, redirect, url_for, flash, abort
 import requests
 
 # OMDb API key (should be stored securely in production)
-OMDB_API_KEY = "16deab3b"
+OMDB_API_KEY = "SECRET KEY GOES HERE"
 
 # Movie details route: shows details for a specific movie, requires login
 @app.route('/details/<movie_id>', methods=['GET'])
