@@ -12,19 +12,115 @@
   <title>ScreenBias</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+  <style>
+    body {
+      background: #e6f2ff;
+      color: #222;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    nav.navbar {
+      background: #1976d2 !important;
+      color: #fff;
+      padding: 0.5em 2em;
+      box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+    }
+    .navbar-brand {
+      font-size: 2em;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #fff !important;
+    }
+    .navbar-nav .nav-link {
+      color: #fff !important;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: background 0.2s;
+      margin-right: 0.5em;
+    }
+    .navbar-nav .nav-link:hover, .navbar-nav .dropdown-menu .dropdown-item:hover {
+      background: #63a4ff !important;
+      color: #fff !important;
+    }
+    .navbar-nav .dropdown-menu {
+      background: #e3f0fa;
+      border: 1px solid #1976d2;
+    }
+    .navbar-nav .dropdown-item {
+      color: #1976d2;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .navbar-nav .dropdown-item:hover {
+      background: #bbdefb;
+      color: #1976d2;
+    }
+    .btn-outline-success {
+      border-color: #1976d2;
+      color: #1976d2;
+    }
+    .btn-outline-success:hover {
+      background: #1976d2;
+      color: #fff;
+    }
+    h2 {
+      color: #1565c0;
+      margin-left: 10px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2em;
+      background: #fafdff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(25, 118, 210, 0.05);
+    }
+    .gallery-scroll {
+      display: flex;
+      overflow-x: auto;
+      gap: 16px;
+      padding: 10px 0 30px 0;
+    }
+    .gallery-item {
+      flex: 0 0 auto;
+      width: 150px;
+      text-align: center;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+      padding: 10px;
+    }
+    .gallery-item img {
+      width: 100%;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(25, 118, 210, 0.10);
+    }
+    .movie-title {
+      margin-top: 8px;
+      font-size: 1em;
+      color: #1976d2;
+      font-weight: 500;
+    }
+  </style>
 </head>
 
 <body>
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg">
     <a class="navbar-brand" href="/home">ScreenBias</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mx-auto">
+        <!-- Home Menu Item -->
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+        </li>
         <!-- Movies Dropdown -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="moviesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -98,14 +194,22 @@
     {% endblock %}
   </div>
 
+  <footer class="footer mt-5" style="background: #1976d2; color: #fff; padding: 1.5em 0; width: 100%; text-align: center;">
+    <div class="mb-2">
+      &copy; ScreenBias {{ year }}
+    </div>
+    <div>
+      <a href="{{ url_for('home') }}" style="color: #fff; margin: 0 10px; text-decoration: underline;">Home</a>
+      <a href="/movies/rightwing" style="color: #fff; margin: 0 10px; text-decoration: underline;">Movies</a>
+      <a href="/tv/rightwing" style="color: #fff; margin: 0 10px; text-decoration: underline;">TV Shows</a>
+      <a href="/actors/rightwing" style="color: #fff; margin: 0 10px; text-decoration: underline;">Actors</a>
+      <a href="/directors/rightwing" style="color: #fff; margin: 0 10px; text-decoration: underline;">Directors</a>
+      <a href="/stats" style="color: #fff; margin: 0 10px; text-decoration: underline;">Stats</a>
+      <a href="/login" style="color: #fff; margin: 0 10px; text-decoration: underline;">Login</a>
+    </div>
+  </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
     crossorigin="anonymous"></script>
 </body>
-<style>
-  body {
-    background-color: #e8f4f8;
-  }
-</style>
-
 </html>

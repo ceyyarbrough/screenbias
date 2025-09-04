@@ -2,4 +2,41 @@
   index.html
   The home page for ScreenBias. Extends base.html.
 #}
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block content %}
+<h2>Newest Movies</h2>
+<div class="gallery-scroll">
+  {% for movie in newest_movies %}
+    <div class="gallery-item">
+      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}">
+        <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
+        <div class="movie-title">{{ movie.Title }}</div>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+
+<h2>Movies by Actor (Tom Hanks)</h2>
+<div class="gallery-scroll">
+  {% for movie in actor_movies %}
+    <div class="gallery-item">
+      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}">
+        <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
+        <div class="movie-title">{{ movie.Title }}</div>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+
+<h2>Movies by Director (Christopher Nolan)</h2>
+<div class="gallery-scroll">
+  {% for movie in director_movies %}
+    <div class="gallery-item">
+      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}">
+        <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
+        <div class="movie-title">{{ movie.Title }}</div>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

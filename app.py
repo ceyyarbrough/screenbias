@@ -1,17 +1,19 @@
 from flask import Flask, render_template, request, abort, redirect, url_for, session, flash
 import requests
 import os
-
+from datetime import datetime
 
 # Initialize Flask app
 app = Flask(__name__)
 # Secret key for session management (change in production)
-app.secret_key = 'your_secret_key_here'
+app.secret_key = 'API Key Goes Here'
+
+@app.context_processor
+def inject_year():
+    return {'year': datetime.now().year}
 
 # OMDb API key (set as environment variable for security)
 OMDB_API_KEY = os.getenv('OMDB_API_KEY')
-
-
 
 # --- Movies Routes ---
 @app.route('/movies/rightwing')
@@ -29,7 +31,6 @@ def movies_center():
     # Render centrist movies page
     return render_template('movies_center.html')
 
-
 # --- TV Shows/Series Routes ---
 @app.route('/tv/rightwing')
 def tv_rightwing():
@@ -45,7 +46,6 @@ def tv_leftwing():
 def tv_center():
     # Render centrist TV shows/series page
     return render_template('tv_center.html')
-
 
 # --- Actors Routes ---
 @app.route('/actors/rightwing')
@@ -63,7 +63,6 @@ def actors_center():
     # Render centrist actors page
     return render_template('actors_center.html')
 
-
 # --- Directors Routes ---
 @app.route('/directors/rightwing')
 def directors_rightwing():
@@ -80,31 +79,44 @@ def directors_center():
     # Render centrist directors page
     return render_template('directors_center.html')
 
- 
 # --- Stats Route ---
 @app.route('/stats')
 def stats():
     # Render stats page
     return render_template('stats.html')
 
-
-
-
 # --- Home Page Route ---
 @app.route('/')
 @app.route('/home')
 def home():
-    # Render the home page
-    return render_template('index.html', name='screenbias')
+    # Fetch newest movies (by year)
+    newest_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=2023&type=movie"
+    newest_resp = requests.get(newest_url)
+    newest_movies = newest_resp.json().get('Search', [])[:10] if newest_resp.status_code == 200 else []
 
+    # Fetch movies by actor (e.g., Tom Hanks)
+    actor_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=Tom%20Hanks&type=movie"
+    actor_resp = requests.get(actor_url)
+    actor_movies = actor_resp.json().get('Search', [])[:10] if actor_resp.status_code == 200 else []
 
+    # Fetch movies by director (e.g., Christopher Nolan)
+    director_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=Christopher%20Nolan&type=movie"
+    director_resp = requests.get(director_url)
+    director_movies = director_resp.json().get('Search', [])[:10] if director_resp.status_code == 200 else []
+
+    return render_template(
+        'index.html',
+        name='screenbias',
+        newest_movies=newest_movies,
+        actor_movies=actor_movies,
+        director_movies=director_movies
+    )
 
 # Simple user store for demonstration (replace with a database in production)
 USERS = {
     'chris': 'password1',
     'nicole': 'password2',
 }
-
 
 # --- Login Route ---
 @app.route('/login', methods=['GET', 'POST'])
@@ -121,7 +133,6 @@ def login():
             flash('Invalid username or password', 'danger')
     return render_template('login.html')
 
-
 # --- Logout Route ---
 @app.route('/logout')
 def logout():
@@ -129,7 +140,6 @@ def logout():
     session.pop('username', None)
     flash('Logged out successfully.', 'info')
     return redirect(url_for('login'))
-
 
 # --- Legacy Routes (for old pages) ---
 @app.route('/rightwing')
@@ -147,7 +157,6 @@ def centerwing():
     # Render legacy centrist films page
     return render_template('center.html', name='centerscreenbias')
 
-
 # --- Search Route ---
 @app.route('/search')
 def search():
@@ -156,7 +165,6 @@ def search():
     if not query:
         return render_template('search_results.html', results=[], error="No query provided.")
 
-    # Example API call (replace with your actual API endpoint and key)
     api_url = f"https://www.omdbapi.com/?apikey={OMDB_API_KEY}&s={query}"
     try:
         response = requests.get(api_url)
@@ -166,7 +174,6 @@ def search():
         return render_template('search_results.html', results=[], error=str(e))
 
     return render_template('search_results.html', results=results, error=None)
-
 
 # --- Movie Details Route ---
 @app.route('/details/<movie_id>', methods=['GET'])
@@ -182,7 +189,6 @@ def movie_details(movie_id):
         abort(404, description="Movie not found or API error")
     movie = response.json()  # Parse the JSON response
     return render_template('movie_details.html', movie=movie)
-
 
 # --- Main entry point ---
 if __name__ == '__main__':
