@@ -15,7 +15,12 @@ def home():
     # Fetch newest movies (by year)
     newest_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=2023&type=movie"
     newest_resp = requests.get(newest_url)
-    newest_movies = newest_resp.json().get('Search', [])[:10] if newest_resp.status_code == 200 else []
+    newest_movies = newest_resp.json().get('Search', []) if newest_resp.status_code == 200 else []
+    # Sort by year descending and take the 10 most recent
+    try:
+        newest_movies = sorted(newest_movies, key=lambda m: int(m.get('Year', 0)), reverse=True)[:10]
+    except Exception:
+        newest_movies = newest_movies[:10]
 
     # Fetch movies by actor (e.g., Tom Hanks)
     actor_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=Tom%20Hanks&type=movie"

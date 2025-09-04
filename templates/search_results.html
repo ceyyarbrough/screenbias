@@ -36,6 +36,27 @@
 <p>No results found.</p>
 {% endif %}
 
+<style>
+#results-table tbody tr {
+  cursor: pointer;
+  transition: background 0.18s;
+}
+#results-table tbody tr:hover {
+  background: #e3f0fa !important;
+}
+#results-table tbody tr:active {
+  background: #bbdefb !important;
+}
+#results-table td:nth-child(2) {
+  color: #174ea6;
+  font-weight: 600;
+  transition: color 0.18s;
+}
+#results-table tbody tr:active td:nth-child(2) {
+  color: #1976d2;
+}
+</style>
+
 <script>
     // Add a click event listener to the table rows
     document.addEventListener('DOMContentLoaded', function () {

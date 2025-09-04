@@ -53,13 +53,40 @@
 </div>
 
 <style>
+.gallery-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 10px 0 30px 0;
+  background: #dbeafe; /* Slightly darker blue background for gallery */
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
+}
+.gallery-item {
+  flex: 0 0 auto;
+  width: 150px;
+  text-align: center;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.12);
+  padding: 10px;
+  border: 2px solid #1976d2; /* More noticeable border */
+  margin: 4px 0;
+  transition: transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s cubic-bezier(.4,2,.6,1), border-color 0.18s;
+}
+.gallery-item:hover {
+  transform: scale(1.07);
+  box-shadow: 0 6px 18px rgba(25, 118, 210, 0.22);
+  border-color: #0d47a1;
+  z-index: 2;
+}
 .gallery-item a.unstyled-link {
   text-decoration: none;
   color: inherit;
 }
 .movie-meta {
   margin-top: 8px;
-  border: 1px solid #1976d2;
+  border: 1.5px solid #1976d2;
   border-radius: 6px;
   background: #fafdff;
   padding: 6px 8px;
