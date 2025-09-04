@@ -96,6 +96,8 @@
       width: 100%;
       border-radius: 6px;
       box-shadow: 0 1px 4px rgba(25, 118, 210, 0.10);
+      max-width: 100%;
+      height: auto;
     }
     .movie-title {
       margin-top: 8px;
@@ -103,10 +105,137 @@
       color: #1976d2;
       font-weight: 500;
     }
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1em;
+      }
+      .gallery-item {
+        width: 110px;
+        font-size: 0.95em;
+      }
+      nav .navbar-brand {
+        font-size: 1.3em;
+      }
+      .navbar-nav .nav-link, .navbar-nav .dropdown-item {
+        font-size: 1em;
+        padding: 0.5em 0.7em;
+      }
+      form.d-flex.mx-auto {
+        width: 100% !important;
+        min-width: 0;
+      }
+    }
+    @media (max-width: 480px) {
+      .gallery-item {
+        width: 90px;
+        font-size: 0.9em;
+      }
+      .container {
+        padding: 0.5em;
+      }
+      .navbar-nav .nav-link, .navbar-nav .dropdown-item {
+        font-size: 0.95em;
+        padding: 0.4em 0.5em;
+      }
+      nav .navbar-brand {
+        font-size: 1em;
+      }
+    }
+    .login-btn {
+      background: #7ed957 !important;
+      color: #1976d2 !important;
+      border-radius: 4px;
+      padding: 0.5em 1.2em;
+      font-weight: 600;
+      margin-left: 0.5em;
+      transition: background 0.2s, color 0.2s;
+      border: none;
+      box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
+    }
+    .login-btn:hover, .login-btn:focus {
+      background: #5bbd3e !important;
+      color: #fff !important;
+      text-decoration: none;
+    }
+    .register-btn {
+      background: #7ed957 !important;
+      color: #1976d2 !important;
+      border-radius: 4px;
+      padding: 0.5em 1.2em;
+      font-weight: 600;
+      margin-left: 0.5em;
+      transition: background 0.2s, color 0.2s;
+      border: none;
+      box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
+    }
+    .register-btn:hover, .register-btn:focus {
+      background: #5bbd3e !important;
+      color: #fff !important;
+      text-decoration: none;
+    }
+    .search-bar-wrapper {
+      border-bottom: 1px solid #b3d1f7;
+    }
+    .search-bar-form .form-control {
+      border-radius: 4px 0 0 4px;
+      border-right: none;
+    }
+    .search-bar-form .btn {
+      border-radius: 0 4px 4px 0;
+    }
+    .navbar-nav .nav-link, .navbar-nav .dropdown-toggle {
+      display: inline-block;
+      width: 100%;
+    }
+    .navbar-nav .nav-item {
+      min-width: 110px;
+      margin: 0 2px;
+    }
+    .navbar-nav .login-btn {
+      background: #7ed957 !important;
+      color: #1976d2 !important;
+      border-radius: 4px;
+      padding: 0.5em 1.2em;
+      font-weight: 600;
+      margin-left: 0.5em;
+      transition: background 0.2s, color 0.2s;
+      border: none;
+      box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
+    }
+    .navbar-nav .login-btn:hover, .navbar-nav .login-btn:focus {
+      background: #5bbd3e !important;
+      color: #fff !important;
+      text-decoration: none;
+    }
+    .navbar-nav .register-btn {
+      background: #7ed957 !important;
+      color: #1976d2 !important;
+      border-radius: 4px;
+      padding: 0.5em 1.2em;
+      font-weight: 600;
+      margin-left: 0.5em;
+      transition: background 0.2s, color 0.2s;
+      border: none;
+      box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
+    }
+    .navbar-nav .register-btn:hover, .navbar-nav .register-btn:focus {
+      background: #5bbd3e !important;
+      color: #fff !important;
+      text-decoration: none;
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- Search bar above navbar -->
+  <div class="search-bar-wrapper" style="background: #e3f0fa; padding: 1em 0; text-align: center;">
+    <form class="d-inline-flex justify-content-center align-items-center search-bar-form" style="max-width: 500px; width: 100%;" action="/search" method="get">
+      <input class="form-control me-2" type="search" name="query" placeholder="Search for Films" aria-label="Search" required style="width: 70%; min-width: 120px;">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
 
   <nav class="navbar navbar-expand-lg">
     <a class="navbar-brand" href="/home">ScreenBias</a>
@@ -115,14 +244,14 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mx-auto">
+    <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+      <ul class="navbar-nav w-100 d-flex justify-content-between align-items-center" style="width: 100%;">
         <!-- Home Menu Item -->
-        <li class="nav-item">
+        <li class="nav-item flex-fill text-center">
           <a class="nav-link" href="{{ url_for('home') }}">Home</a>
         </li>
         <!-- Movies Dropdown -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown flex-fill text-center">
           <a class="nav-link dropdown-toggle" href="#" id="moviesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Movies
           </a>
@@ -133,7 +262,7 @@
           </ul>
         </li>
         <!-- TV Shows/Series Dropdown -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown flex-fill text-center">
           <a class="nav-link dropdown-toggle" href="#" id="tvDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             TV Shows/Series
           </a>
@@ -144,7 +273,7 @@
           </ul>
         </li>
         <!-- Actors Dropdown -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown flex-fill text-center">
           <a class="nav-link dropdown-toggle" href="#" id="actorsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Actors
           </a>
@@ -155,7 +284,7 @@
           </ul>
         </li>
         <!-- Directors Dropdown -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown flex-fill text-center">
           <a class="nav-link dropdown-toggle" href="#" id="directorsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Directors
           </a>
@@ -166,22 +295,18 @@
           </ul>
         </li>
         <!-- Stats Button -->
-        <li class="nav-item">
+        <li class="nav-item flex-fill text-center">
           <a class="nav-link" href="/stats">Stats</a>
         </li>
-      </ul>
-      <form class="d-flex mx-auto" style="width: 400px;" action="/search" method="get">
-        <input class="form-control me-2" type="search" name="query" placeholder="Search for Films" aria-label="Search" required>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-      <ul class="navbar-nav ms-auto">
+        <!-- Login/Logout Button -->
         {% if session.get('username') %}
-        <li class="nav-item">
+        <li class="nav-item flex-fill text-center">
           <a class="nav-link" href="/logout">Logout ({{ session['username'] }})</a>
         </li>
         {% else %}
-        <li class="nav-item active">
-          <a class="nav-link" href="/login">Login <span class="sr-only"></span></a>
+        <li class="nav-item flex-fill text-center d-flex flex-column align-items-center justify-content-center" style="min-width: 120px;">
+          <a class="nav-link login-btn mb-1" href="/login">Login <span class="sr-only"></span></a>
+          <a class="nav-link register-btn" href="/register">Register</a>
         </li>
         {% endif %}
       </ul>

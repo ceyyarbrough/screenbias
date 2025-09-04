@@ -8,9 +8,13 @@
 <div class="gallery-scroll">
   {% for movie in newest_movies %}
     <div class="gallery-item">
-      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}">
+      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
         <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
         <div class="movie-title">{{ movie.Title }}</div>
+        <div class="movie-meta">
+          <div class="movie-year">Year: {{ movie.Year }}</div>
+          <div class="movie-director">Director: {{ movie.Director if movie.Director is defined else 'N/A' }}</div>
+        </div>
       </a>
     </div>
   {% endfor %}
@@ -20,9 +24,13 @@
 <div class="gallery-scroll">
   {% for movie in actor_movies %}
     <div class="gallery-item">
-      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}">
+      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
         <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
         <div class="movie-title">{{ movie.Title }}</div>
+        <div class="movie-meta">
+          <div class="movie-year">Year: {{ movie.Year }}</div>
+          <div class="movie-director">Director: {{ movie.Director if movie.Director is defined else 'N/A' }}</div>
+        </div>
       </a>
     </div>
   {% endfor %}
@@ -32,11 +40,38 @@
 <div class="gallery-scroll">
   {% for movie in director_movies %}
     <div class="gallery-item">
-      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}">
+      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
         <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
         <div class="movie-title">{{ movie.Title }}</div>
+        <div class="movie-meta">
+          <div class="movie-year">Year: {{ movie.Year }}</div>
+          <div class="movie-director">Director: {{ movie.Director if movie.Director is defined else 'N/A' }}</div>
+        </div>
       </a>
     </div>
   {% endfor %}
 </div>
+
+<style>
+.gallery-item a.unstyled-link {
+  text-decoration: none;
+  color: inherit;
+}
+.movie-meta {
+  margin-top: 8px;
+  border: 1px solid #1976d2;
+  border-radius: 6px;
+  background: #fafdff;
+  padding: 6px 8px;
+  font-size: 0.95em;
+  color: #1976d2;
+  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
+}
+.movie-year, .movie-director {
+  margin-bottom: 2px;
+}
+.movie-year:last-child, .movie-director:last-child {
+  margin-bottom: 0;
+}
+</style>
 {% endblock %}
