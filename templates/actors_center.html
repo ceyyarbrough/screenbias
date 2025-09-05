@@ -5,4 +5,29 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Centrist Actors</h1>
+<div class="gallery-scroll">
+  {% for actor in actors %}
+    <div class="gallery-item">
+      <a href="{{ url_for('movie_details', movie_id=actor.imdbID) }}" class="unstyled-link">
+        <img src="{{ actor.Poster if actor.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ actor.Title }}">
+        <div class="movie-title">{{ actor.Title }}
+          {% if actor.avg_rating is not none %}
+            {% set badge_class = 'bg-info text-dark' %}
+            {% if actor.avg_rating >= 70 %}
+              {% set badge_class = 'bg-danger text-light' %}
+            {% elif actor.avg_rating <= 30 %}
+              {% set badge_class = 'bg-primary text-light' %}
+            {% elif 30 < actor.avg_rating < 70 %}
+              {% set badge_class = 'bg-warning text-dark' %}
+            {% endif %}
+            <span class="badge {{ badge_class }} ms-1">{{ actor.avg_rating|round(1) }}</span>
+          {% endif %}
+        </div>
+        <div class="movie-meta">
+          <div class="movie-year">Year: {{ actor.Year }}</div>
+        </div>
+      </a>
+    </div>
+  {% endfor %}
+</div>
 {% endblock %}

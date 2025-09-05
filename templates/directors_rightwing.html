@@ -5,4 +5,29 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Right Wing Directors</h1>
+<div class="gallery-scroll">
+  {% for director in directors %}
+    <div class="gallery-item">
+      <a href="{{ url_for('movie_details', movie_id=director.imdbID) }}" class="unstyled-link">
+        <img src="{{ director.Poster if director.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ director.Title }}">
+        <div class="movie-title">{{ director.Title }}
+          {% if director.avg_rating is not none %}
+            {% set badge_class = 'bg-info text-dark' %}
+            {% if director.avg_rating >= 70 %}
+              {% set badge_class = 'bg-danger text-light' %}
+            {% elif director.avg_rating <= 30 %}
+              {% set badge_class = 'bg-primary text-light' %}
+            {% elif 30 < director.avg_rating < 70 %}
+              {% set badge_class = 'bg-warning text-dark' %}
+            {% endif %}
+            <span class="badge {{ badge_class }} ms-1">{{ director.avg_rating|round(1) }}</span>
+          {% endif %}
+        </div>
+        <div class="movie-meta">
+          <div class="movie-year">Year: {{ director.Year }}</div>
+        </div>
+      </a>
+    </div>
+  {% endfor %}
+</div>
 {% endblock %}

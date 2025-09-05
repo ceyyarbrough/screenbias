@@ -7,7 +7,15 @@
 {% block content %}
 <h1>{{ movie.Title }}
   {% if avg_rating is not none %}
-    <span class="badge bg-info text-dark ms-2">Leaning: {{ 'Left' if avg_rating < 50 else ('Right' if avg_rating > 50 else 'Center') }} ({{ avg_rating|round(1) }})</span>
+    {% set badge_class = 'bg-info text-dark' %}
+    {% if avg_rating >= 70 %}
+      {% set badge_class = 'bg-danger text-light' %}
+    {% elif avg_rating <= 30 %}
+      {% set badge_class = 'bg-primary text-light' %}
+    {% elif 30 < avg_rating < 70 %}
+      {% set badge_class = 'bg-warning text-dark' %}
+    {% endif %}
+    <span class="badge {{ badge_class }} ms-2">Leaning: {{ 'Left' if avg_rating < 50 else ('Right' if avg_rating > 50 else 'Center') }} ({{ avg_rating|round(1) }})</span>
   {% else %}
     <span class="badge bg-secondary ms-2">no reviews yet, please rate</span>
   {% endif %}
@@ -56,8 +64,16 @@
   {% if reviews %}
     <ul class="list-group">
       {% for r in reviews %}
+        {% set badge_class = 'bg-info text-dark' %}
+        {% if r.rating >= 70 %}
+          {% set badge_class = 'bg-danger text-light' %}
+        {% elif r.rating <= 30 %}
+          {% set badge_class = 'bg-primary text-light' %}
+        {% elif 30 < r.rating < 70 %}
+          {% set badge_class = 'bg-warning text-dark' %}
+        {% endif %}
         <li class="list-group-item">
-          <strong>{{ r.username }}</strong> rated <b>{{ r.rating }}</b> ({{ 'Left' if r.rating < 50 else ('Right' if r.rating > 50 else 'Center') }})<br>
+          <strong>{{ r.username }}</strong> rated <span class="badge {{ badge_class }}">{{ r.rating }}</span> ({{ 'Left' if r.rating < 50 else ('Right' if r.rating > 50 else 'Center') }})<br>
           <span>{{ r.review_text }}</span>
           <div class="text-muted small">{{ r.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
         </li>
