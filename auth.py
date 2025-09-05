@@ -1,17 +1,12 @@
-# auth.py
-# Handles user authentication: login, logout, and session management.
-
 from . import app
 from flask import render_template, request, redirect, url_for, session, flash
 import requests
 
-# Simple user store for demonstration (replace with a database in production)
 USERS = {
     'chris': 'password1',
     'nicole': 'password2',
 }
 
-# Login route: handles GET (show form) and POST (authenticate)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -24,3 +19,9 @@ def login():
         else:
             flash('Invalid username or password', 'danger')
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    flash('Logged out successfully.', 'info')
+    return redirect(url_for('login'))

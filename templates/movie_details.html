@@ -5,7 +5,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ movie.Title }}</h1>
+<h1>{{ movie.Title }}
+  {% if avg_rating is not none %}
+    <span class="badge bg-info text-dark ms-2">Leaning: {{ 'Left' if avg_rating < 50 else ('Right' if avg_rating > 50 else 'Center') }} ({{ avg_rating|round(1) }})</span>
+  {% else %}
+    <span class="badge bg-secondary ms-2">no reviews yet, please rate</span>
+  {% endif %}
+</h1>
 <img src="{{ movie.Poster }}" alt="Poster for {{ movie.Title }}" style="width: 200px;">
 <p><strong>Year:</strong> {{ movie.Year }}</p>
 <p><strong>Genre:</strong> {{ movie.Genre }}</p>
@@ -13,4 +19,52 @@
 <p><strong>Actors:</strong> {{ movie.Actors }}</p>
 <p><strong>Plot:</strong> {{ movie.Plot }}</p>
 <p><strong>IMDB Rating:</strong> {{ movie.imdbRating }}</p>
+
+{% if session.get('username') %}
+  <!-- Button to open review modal -->
+  <button class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#reviewModal">Rate & Review This Movie</button>
+{% else %}
+  <div class="alert alert-info my-3">Log in to rate and review this movie.</div>
+{% endif %}
+
+<!-- Review Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reviewModalLabel">Rate & Review: {{ movie.Title }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="ratingRange" class="form-label">Political Leaning (0 = Left, 100 = Right): <span id="ratingValue">50</span></label>
+          <input type="range" class="form-range" min="0" max="100" value="50" id="ratingRange" name="rating" oninput="document.getElementById('ratingValue').innerText = this.value">
+          <textarea class="form-control mt-3" name="review_text" rows="3" placeholder="Explain your rating and why you think this movie leans this way..." required></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success">Submit Review</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Display reviews -->
+<div class="mt-4">
+  <h4>Reviews</h4>
+  {% if reviews %}
+    <ul class="list-group">
+      {% for r in reviews %}
+        <li class="list-group-item">
+          <strong>{{ r.username }}</strong> rated <b>{{ r.rating }}</b> ({{ 'Left' if r.rating < 50 else ('Right' if r.rating > 50 else 'Center') }})<br>
+          <span>{{ r.review_text }}</span>
+          <div class="text-muted small">{{ r.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="text-muted">No reviews yet.</div>
+  {% endif %}
+</div>
 {% endblock %}

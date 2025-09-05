@@ -17,13 +17,10 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
-      <div class="mb-3">
-        <!-- Google reCAPTCHA v2 widget -->
-        <div class="g-recaptcha" data-sitekey="SITE KEY GOES HERE"></div>
-      </div>
+  <!-- CAPTCHA removed for testing -->
       <button type="submit" class="btn btn-primary">Login</button>
     </form>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <!-- reCAPTCHA script removed for testing -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="mt-3">

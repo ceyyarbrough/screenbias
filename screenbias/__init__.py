@@ -4,10 +4,19 @@
 import os
 from flask import Flask
 
+
 # Explicitly set the template folder to the project-level templates directory
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates'))
 # Secret key for session management (should be changed in production)
 app.secret_key = 'API Key Goes Here'
+
+# Database configuration (SQLite for simplicity)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///screenbias.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Import and initialize SQLAlchemy
+from .models import db
+db.init_app(app)
 
 
 # Context processor to inject the current year into all templates
