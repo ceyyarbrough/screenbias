@@ -12,9 +12,12 @@ USERS = {
     'nicole': 'password2',
 }
 
-# Logout route
+# Logout route: logs out the current user and redirects to login page
 @app.route('/logout')
 def logout():
+    """
+    Logs out the current user by removing 'username' from session.
+    """
     session.pop('username', None)
     flash('Logged out successfully.', 'info')
     return redirect(url_for('login'))
@@ -22,6 +25,10 @@ def logout():
 # Login route: handles GET (show form) and POST (authenticate)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    Login page. On POST, authenticates user against USERS dict and sets session.
+    On GET, displays the login form.
+    """
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')

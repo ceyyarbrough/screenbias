@@ -1,9 +1,10 @@
+
 # __init__.py
-# Initializes the Flask app, sets up context processors, and imports all route modules.
+# Initializes the Flask app, sets up context processors, configures the database, and imports all route modules.
+
 
 import os
 from flask import Flask
-
 
 # Explicitly set the template folder to the project-level templates directory
 app = Flask(
@@ -22,14 +23,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 from .models import db
 db.init_app(app)
 
-
 # Context processor to inject the current year into all templates
 # This allows you to use {{ year }} in any template
-
 def inject_year():
     from datetime import datetime
     return {'year': datetime.now().year}
 app.context_processor(inject_year)
 
 # Import route modules after app/context processor to avoid circular import issues
+# This ensures all routes are registered with the Flask app
 from . import routes, auth, omdb, legacy, search, details, register, delete_review

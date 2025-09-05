@@ -1,7 +1,6 @@
-"""
-register.py
-Handles user registration form and (future) database integration.
-"""
+
+# register.py
+# Handles user registration form and (future) database integration.
 
 from . import app
 from flask import render_template, request, redirect, url_for, flash
@@ -20,6 +19,11 @@ from flask import render_template, request, redirect, url_for, flash
 # Registration route: handles GET (show form) and POST (process registration)
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    """
+    Registration page. On POST, collects user info (email, phone, name, country).
+    (DB integration is a placeholder for future expansion.)
+    On GET, displays the registration form.
+    """
     if request.method == 'POST':
         email = request.form.get('email')
         phone = request.form.get('phone')

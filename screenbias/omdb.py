@@ -1,5 +1,8 @@
+
 # omdb.py
 # Contains routes that interact with the OMDb API for the home page and movie galleries.
+# Handles fetching and displaying movie galleries (newest, recently reviewed, most reviewed, by actor, by director).
+
 
 
 from . import app
@@ -7,13 +10,23 @@ from flask import render_template
 import requests
 from .models import Review
 
+
 # OMDb API key (should be stored securely in production)
 OMDB_API_KEY = "16deab3b"
 
-# Home page route: displays three movie galleries using OMDb API data
+
+# Home page route: displays movie galleries using OMDb API data
 @app.route('/')
 @app.route('/home')
 def home():
+    """
+    Home page route. Displays:
+    - Newest movies (2025 only, using multiple search terms to maximize OMDb results)
+    - Movies by actor (Tom Hanks)
+    - Movies by director (Christopher Nolan)
+    - Recently reviewed movies (last 10 unique movies with reviews, includes avg_rating)
+    - Most reviewed movies (top 10 by number of reviews, includes avg_rating and review_count)
+    """
     # Fetch newest movies (2025 only) - OMDb API requires a more specific search term
     search_terms = ['the', 'a', 'of', 'in', 'on', 'and', 'to', 'for', 'with', 'by']
     seen_ids = set()
@@ -22,8 +35,10 @@ def home():
         url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&y=2025&type=movie&s={term}"
         resp = requests.get(url)
         if resp.status_code == 200:
+            # OMDb returns up to 10 results per search term
             results = resp.json().get('Search', [])
             for m in results:
+                # Only add unique 2025 movies
                 if m.get('Year') == '2025' and m.get('imdbID') not in seen_ids:
                     newest_movies.append(m)
                     seen_ids.add(m.get('imdbID'))
@@ -61,6 +76,7 @@ def home():
         resp = requests.get(api_url)
         if resp.status_code == 200 and resp.json().get('Response') == 'True':
             movie = resp.json()
+            # Calculate average rating for this movie
             reviews = Review.query.filter_by(movie_id=imdb_id).all()
             if reviews:
                 avg_rating = sum(r.rating for r in reviews) / len(reviews)
