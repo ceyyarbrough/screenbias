@@ -1,3 +1,5 @@
+# DEBUG: Confirm details.py is being executed
+print('details.py loaded')
 
 # details.py
 # Handles the route for displaying details of a specific movie (login required),
@@ -5,6 +7,7 @@
 
 from flask import jsonify
 from . import app
+from . import cache
 from flask import render_template, session, redirect, url_for, flash, abort, request
 import requests
 from .models import db, Review, ReviewReaction
@@ -66,7 +69,9 @@ if OMDB_API_KEY == 'insecure-demo-key':
 
 
 
-# Movie details route: shows details for a specific movie, allows review if logged in
+def _cached_omdb_get(url):
+    return requests.get(url).json()
+
 @app.route('/details/<movie_id>', methods=['GET', 'POST'])
 def movie_details(movie_id):
     """
@@ -77,10 +82,9 @@ def movie_details(movie_id):
     """
     # Call the OMDb API to fetch movie details
     api_url = f"http://www.omdbapi.com/?i={movie_id}&apikey={OMDB_API_KEY}"
-    response = requests.get(api_url)
-    if response.status_code != 200 or not response.json().get('Response') == 'True':
+    movie = _cached_omdb_get(api_url)
+    if not movie or not movie.get('Response') == 'True':
         abort(404, description="Movie not found or API error")
-    movie = response.json()
 
     # Handle review submission
     if request.method == 'POST':

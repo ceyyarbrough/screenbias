@@ -6,6 +6,7 @@
 
 
 from . import app
+from . import cache
 from flask import render_template
 import requests
 from .models import Review
@@ -20,9 +21,16 @@ if OMDB_API_KEY == 'insecure-demo-key':
     warnings.warn('WARNING: Using insecure default OMDb API key! Set OMDB_API_KEY in your environment for production.')
 
 
+def _cached_omdb_get(url):
+    return requests.get(url).json()
+
 # Home page route: displays movie galleries using OMDb API data
 @app.route('/')
 @app.route('/home')
+
+# Module-level OMDb API cache helper
+
+
 def home():
     """
     Home page route. Displays:
@@ -38,29 +46,28 @@ def home():
     newest_movies = []
     for term in search_terms:
         url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&y=2025&type=movie&s={term}"
-        resp = requests.get(url)
-        if resp.status_code == 200:
-            # OMDb returns up to 10 results per search term
-            results = resp.json().get('Search', [])
-            for m in results:
-                # Only add unique 2025 movies
-                if m.get('Year') == '2025' and m.get('imdbID') not in seen_ids:
-                    newest_movies.append(m)
-                    seen_ids.add(m.get('imdbID'))
-                if len(newest_movies) >= 10:
-                    break
+        resp_json = _cached_omdb_get(url)
+        # OMDb returns up to 10 results per search term
+        results = resp_json.get('Search', [])
+        for m in results:
+            # Only add unique 2025 movies
+            if m.get('Year') == '2025' and m.get('imdbID') not in seen_ids:
+                newest_movies.append(m)
+                seen_ids.add(m.get('imdbID'))
+            if len(newest_movies) >= 10:
+                break
         if len(newest_movies) >= 10:
             break
 
     # Fetch movies by actor (e.g., Tom Hanks)
     actor_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=Tom%20Hanks&type=movie"
-    actor_resp = requests.get(actor_url)
-    actor_movies = actor_resp.json().get('Search', [])[:10] if actor_resp.status_code == 200 else []
+    actor_resp_json = _cached_omdb_get(actor_url)
+    actor_movies = actor_resp_json.get('Search', [])[:10]
 
     # Fetch movies by director (e.g., Christopher Nolan)
     director_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=Christopher%20Nolan&type=movie"
-    director_resp = requests.get(director_url)
-    director_movies = director_resp.json().get('Search', [])[:10] if director_resp.status_code == 200 else []
+    director_resp_json = _cached_omdb_get(director_url)
+    director_movies = director_resp_json.get('Search', [])[:10]
 
     # Recently reviewed movies (last 10 reviews, unique movies)
     recent_reviews = Review.query.order_by(Review.created_at.desc()).all()
@@ -78,9 +85,9 @@ def home():
     from .models import db
     for imdb_id in recent_movie_ids:
         api_url = f"http://www.omdbapi.com/?i={imdb_id}&apikey={OMDB_API_KEY}"
-        resp = requests.get(api_url)
-        if resp.status_code == 200 and resp.json().get('Response') == 'True':
-            movie = resp.json()
+        resp_json = _cached_omdb_get(api_url)
+        if resp_json.get('Response') == 'True':
+            movie = resp_json
             # Calculate average rating for this movie
             reviews = Review.query.filter_by(movie_id=imdb_id).all()
             if reviews:
@@ -97,9 +104,9 @@ def home():
     most_reviewed = []
     for imdb_id in most_reviewed_ids:
         api_url = f"http://www.omdbapi.com/?i={imdb_id}&apikey={OMDB_API_KEY}"
-        resp = requests.get(api_url)
-        if resp.status_code == 200 and resp.json().get('Response') == 'True':
-            movie = resp.json()
+        resp_json = _cached_omdb_get(api_url)
+        if resp_json.get('Response') == 'True':
+            movie = resp_json
             movie['review_count'] = review_counts[imdb_id]
             # Calculate avg_rating for this movie
             reviews = Review.query.filter_by(movie_id=imdb_id).all()

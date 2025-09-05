@@ -9,7 +9,7 @@
 <div class="gallery-scroll">
   {% for movie in newest_movies %}
     <div class="gallery-item">
-      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
+  <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
         <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
         <div class="movie-title">{{ movie.Title }}</div>
         <div class="movie-meta">
@@ -26,7 +26,7 @@
 <div class="gallery-scroll">
   {% for movie in recently_reviewed %}
     <div class="gallery-item">
-      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
+  <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
         <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
         <div class="movie-title">{{ movie.Title }}</div>
         <div class="movie-meta">
@@ -51,7 +51,7 @@
 <div class="gallery-scroll">
   {% for movie in most_reviewed %}
     <div class="gallery-item">
-      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
+  <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
         <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
         <div class="movie-title">{{ movie.Title }}</div>
         <div class="movie-meta">
