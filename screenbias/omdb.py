@@ -11,8 +11,13 @@ import requests
 from .models import Review
 
 
+
 # OMDb API key (should be stored securely in production)
-OMDB_API_KEY = "16deab3b"
+import os
+OMDB_API_KEY = os.environ.get('OMDB_API_KEY', 'insecure-demo-key')
+if OMDB_API_KEY == 'insecure-demo-key':
+    import warnings
+    warnings.warn('WARNING: Using insecure default OMDb API key! Set OMDB_API_KEY in your environment for production.')
 
 
 # Home page route: displays movie galleries using OMDb API data

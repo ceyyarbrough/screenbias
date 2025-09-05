@@ -6,11 +6,16 @@ from . import app
 from flask import render_template, request, redirect, url_for, session, flash
 import requests
 
+
 # Simple user store for demonstration (replace with a database in production)
+import os
+import warnings
 USERS = {
-    'chris': 'password1',
-    'nicole': 'password2',
+    os.environ.get('SCREENBIAS_USER1', 'chris'): os.environ.get('SCREENBIAS_PASS1', 'password1'),
+    os.environ.get('SCREENBIAS_USER2', 'nicole'): os.environ.get('SCREENBIAS_PASS2', 'password2'),
 }
+if USERS.get('chris') == 'password1' or USERS.get('nicole') == 'password2':
+    warnings.warn('WARNING: Using demo user credentials! Set SCREENBIAS_USER1/2 and SCREENBIAS_PASS1/2 in your environment for production.')
 
 # Logout route: logs out the current user and redirects to login page
 @app.route('/logout')

@@ -12,8 +12,12 @@ app = Flask(
     template_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates'),
     static_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static')
 )
-# Secret key for session management (should be changed in production)
-app.secret_key = 'API Key Goes Here'
+
+# Secret key for session management (should be set securely in production)
+app.secret_key = os.environ.get('SCREENBIAS_SECRET_KEY', 'insecure-dev-key')
+if app.secret_key == 'insecure-dev-key':
+    import warnings
+    warnings.warn('WARNING: Using insecure default secret key! Set SCREENBIAS_SECRET_KEY in your environment for production.')
 
 # Database configuration (SQLite for simplicity)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///screenbias.db'

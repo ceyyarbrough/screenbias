@@ -1,3 +1,6 @@
+
+{# Enforce autoescaping for all templates #}
+{% autoescape true %}
 <!--
   base.html
   This is the main layout template for ScreenBias. It includes the navigation bar, search form, and a content block for all pages.
@@ -137,3 +140,4 @@
 </body>
 
 </html>
+{% endautoescape %}
