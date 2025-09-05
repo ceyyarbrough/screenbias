@@ -14,7 +14,7 @@
 body {
   background: #e6f2ff;
   color: #222;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: 'Fira Mono', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace !important;
   margin: 0;
   padding: 0;
 }
@@ -100,15 +100,16 @@ h2 {
 }
 .gallery-item {
   flex: 0 0 auto;
-  width: 150px;
+  width: 190px; /* wider */
   text-align: center;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(25, 118, 210, 0.12);
-  padding: 10px;
+  padding: 16px 10px 18px 10px; /* more vertical space */
   border: 2px solid #1976d2; /* More noticeable border */
   margin: 4px 0;
   transition: transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s cubic-bezier(.4,2,.6,1), border-color 0.18s;
+  min-height: 270px;
 }
 .gallery-item:hover {
   transform: scale(1.07);

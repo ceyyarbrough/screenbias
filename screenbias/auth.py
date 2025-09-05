@@ -1,3 +1,4 @@
+
 # auth.py
 # Handles user authentication: login, logout, and session management.
 
@@ -10,6 +11,13 @@ USERS = {
     'chris': 'password1',
     'nicole': 'password2',
 }
+
+# Logout route
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    flash('Logged out successfully.', 'info')
+    return redirect(url_for('login'))
 
 # Login route: handles GET (show form) and POST (authenticate)
 @app.route('/login', methods=['GET', 'POST'])

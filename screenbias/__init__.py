@@ -32,4 +32,4 @@ def inject_year():
 app.context_processor(inject_year)
 
 # Import route modules after app/context processor to avoid circular import issues
-from . import routes, auth, omdb, legacy, search, details, register
+from . import routes, auth, omdb, legacy, search, details, register, delete_review

@@ -14,15 +14,23 @@ OMDB_API_KEY = "16deab3b"
 @app.route('/')
 @app.route('/home')
 def home():
-    # Fetch newest movies (by year)
-    newest_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=2023&type=movie"
-    newest_resp = requests.get(newest_url)
-    newest_movies = newest_resp.json().get('Search', []) if newest_resp.status_code == 200 else []
-    # Sort by year descending and take the 10 most recent
-    try:
-        newest_movies = sorted(newest_movies, key=lambda m: int(m.get('Year', 0)), reverse=True)[:10]
-    except Exception:
-        newest_movies = newest_movies[:10]
+    # Fetch newest movies (2025 only) - OMDb API requires a more specific search term
+    search_terms = ['the', 'a', 'of', 'in', 'on', 'and', 'to', 'for', 'with', 'by']
+    seen_ids = set()
+    newest_movies = []
+    for term in search_terms:
+        url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&y=2025&type=movie&s={term}"
+        resp = requests.get(url)
+        if resp.status_code == 200:
+            results = resp.json().get('Search', [])
+            for m in results:
+                if m.get('Year') == '2025' and m.get('imdbID') not in seen_ids:
+                    newest_movies.append(m)
+                    seen_ids.add(m.get('imdbID'))
+                if len(newest_movies) >= 10:
+                    break
+        if len(newest_movies) >= 10:
+            break
 
     # Fetch movies by actor (e.g., Tom Hanks)
     actor_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=Tom%20Hanks&type=movie"
@@ -61,6 +69,26 @@ def home():
                 movie['avg_rating'] = None
             recently_reviewed.append(movie)
 
+    # Most reviewed movies (top 10 by number of reviews)
+    from collections import Counter
+    review_counts = Counter([r.movie_id for r in Review.query.all()])
+    most_reviewed_ids = [imdb_id for imdb_id, count in review_counts.most_common(10)]
+    most_reviewed = []
+    for imdb_id in most_reviewed_ids:
+        api_url = f"http://www.omdbapi.com/?i={imdb_id}&apikey={OMDB_API_KEY}"
+        resp = requests.get(api_url)
+        if resp.status_code == 200 and resp.json().get('Response') == 'True':
+            movie = resp.json()
+            movie['review_count'] = review_counts[imdb_id]
+            # Calculate avg_rating for this movie
+            reviews = Review.query.filter_by(movie_id=imdb_id).all()
+            if reviews:
+                avg_rating = sum(r.rating for r in reviews) / len(reviews)
+                movie['avg_rating'] = avg_rating
+            else:
+                movie['avg_rating'] = None
+            most_reviewed.append(movie)
+
     # Render the index.html template with all movie galleries
     return render_template(
         'index.html',
@@ -68,5 +96,6 @@ def home():
         newest_movies=newest_movies,
         actor_movies=actor_movies,
         director_movies=director_movies,
-        recently_reviewed=recently_reviewed
+        recently_reviewed=recently_reviewed,
+        most_reviewed=most_reviewed
     )

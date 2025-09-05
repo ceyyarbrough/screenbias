@@ -21,6 +21,7 @@
   {% endfor %}
 </div>
 
+
 <h2>Recently Reviewed Movies</h2>
 <div class="gallery-scroll">
   {% for movie in recently_reviewed %}
@@ -39,7 +40,38 @@
           {% elif movie.avg_rating <= 33 %}
             {% set badge_color = 'badge-left' %}
           {% endif %}
-          <span class="badge {{ badge_color }}" style="margin-top: 6px;">Avg Score: {{ '%.1f' % movie.avg_rating }}</span>
+          <span class="badge {{ badge_color }}" style="margin-top: 6px;">{{ '%.1f' % movie.avg_rating }}</span>
+        {% endif %}
+      </a>
+    </div>
+  {% endfor %}
+</div>
+
+<h2>Most Reviewed Movies</h2>
+<div class="gallery-scroll">
+  {% for movie in most_reviewed %}
+    <div class="gallery-item">
+      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
+        <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
+        <div class="movie-title">{{ movie.Title }}</div>
+        <div class="movie-meta">
+          <div class="movie-year">Year: {{ movie.Year }}</div>
+          <div class="movie-director">Director: {{ movie.Director if movie.Director is defined else 'N/A' }}</div>
+        </div>
+        <span class="badge badge-center" style="margin-top: 6px;">Reviews: {{ movie.review_count }}</span>
+        {# Add average score with color coding #}
+        {% set avg_rating = None %}
+        {% if movie.imdbID is defined %}
+          {% set avg_rating = (movie.avg_rating if movie.avg_rating is defined else None) %}
+        {% endif %}
+        {% if avg_rating is not none %}
+          {% set badge_color = 'badge-center' %}
+          {% if avg_rating >= 66 %}
+            {% set badge_color = 'badge-right' %}
+          {% elif avg_rating <= 33 %}
+            {% set badge_color = 'badge-left' %}
+          {% endif %}
+          <span class="badge {{ badge_color }}" style="margin-top: 6px;">{{ '%.1f' % avg_rating }}</span>
         {% endif %}
       </a>
     </div>

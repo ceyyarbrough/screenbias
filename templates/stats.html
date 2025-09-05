@@ -5,4 +5,170 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Stats</h1>
+
+
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <h4>Average Leaning by Country</h4>
+    <table class="table table-bordered table-striped">
+      <thead><tr><th>Country</th><th>Leaning</th><th>Reviews</th></tr></thead>
+      <tbody>
+        {% for c in country_chart %}
+        <tr>
+          <td>{{ c.country }}</td>
+          <td>
+            {% set badge = 'badge-center' %}
+            {% set label = 'Center' %}
+            {% if c.avg >= 66 %}
+              {% set badge = 'badge-right' %}
+              {% set label = 'Right Wing' %}
+            {% elif c.avg <= 33 %}
+              {% set badge = 'badge-left' %}
+              {% set label = 'Left Wing' %}
+            {% endif %}
+            <span class="badge {{ badge }}">{{ label }}</span>
+          </td>
+          <td>{{ c.count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <canvas id="countryChart" height="200"></canvas>
+  </div>
+  <div class="col-md-6 mb-4">
+    <h4>Average Leaning by Genre</h4>
+    <table class="table table-bordered table-striped">
+      <thead><tr><th>Genre</th><th>Leaning</th><th>Reviews</th></tr></thead>
+      <tbody>
+        {% for g in genre_chart %}
+        <tr>
+          <td>{{ g.genre }}</td>
+          <td>
+            {% set badge = 'badge-center' %}
+            {% set label = 'Center' %}
+            {% if g.avg >= 66 %}
+              {% set badge = 'badge-right' %}
+              {% set label = 'Right Wing' %}
+            {% elif g.avg <= 33 %}
+              {% set badge = 'badge-left' %}
+              {% set label = 'Left Wing' %}
+            {% endif %}
+            <span class="badge {{ badge }}">{{ label }}</span>
+          </td>
+          <td>{{ g.count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  <canvas id="genreChart" height="200"></canvas>
+  </div>
+  <div class="col-md-6 mb-4">
+    <h4>Average Leaning by Year</h4>
+    <table class="table table-bordered table-striped">
+      <thead><tr><th>Year</th><th>Leaning</th><th>Reviews</th></tr></thead>
+      <tbody>
+        {% for y in year_chart %}
+        <tr>
+          <td>{{ y.year }}</td>
+          <td>
+            {% set badge = 'badge-center' %}
+            {% set label = 'Center' %}
+            {% if y.avg >= 66 %}
+              {% set badge = 'badge-right' %}
+              {% set label = 'Right Wing' %}
+            {% elif y.avg <= 33 %}
+              {% set badge = 'badge-left' %}
+              {% set label = 'Left Wing' %}
+            {% endif %}
+            <span class="badge {{ badge }}">{{ label }}</span>
+          </td>
+          <td>{{ y.count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  <canvas id="yearChart" height="200"></canvas>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 mb-4">
+    <h4>Overall Average Leaning</h4>
+    {% set badge = 'badge-center' %}
+    {% set label = 'Center' %}
+    {% if overall_avg >= 66 %}
+      {% set badge = 'badge-right' %}
+      {% set label = 'Right Wing' %}
+    {% elif overall_avg <= 33 %}
+      {% set badge = 'badge-left' %}
+      {% set label = 'Left Wing' %}
+    {% endif %}
+    <span class="display-4 badge {{ badge }}">{{ label }}</span>
+    <div>Total Reviews: {{ total_reviews }}</div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript">
+// Genre Chart
+const genreLabels = {{ genre_chart|map(attribute='genre')|list|tojson|safe }};
+const genreDataVals = {{ genre_chart|map(attribute='avg')|list|tojson|safe }};
+const genreData = {
+  labels: genreLabels,
+  datasets: [{
+    label: 'Avg Rating',
+    data: genreDataVals,
+    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+    borderColor: 'rgba(54, 162, 235, 1)',
+    borderWidth: 1
+  }]
+};
+if (document.getElementById('genreChart')) {
+  new Chart(document.getElementById('genreChart'), {
+    type: 'bar',
+    data: genreData,
+    options: {scales: {y: {beginAtZero: true, max: 100}}}
+  });
+}
+// Year Chart
+const yearLabels = {{ year_chart|map(attribute='year')|list|tojson|safe }};
+const yearDataVals = {{ year_chart|map(attribute='avg')|list|tojson|safe }};
+const yearData = {
+  labels: yearLabels,
+  datasets: [{
+    label: 'Avg Rating',
+    data: yearDataVals,
+    backgroundColor: 'rgba(255, 206, 86, 0.6)',
+    borderColor: 'rgba(255, 206, 86, 1)',
+    borderWidth: 1
+  }]
+};
+if (document.getElementById('yearChart')) {
+  new Chart(document.getElementById('yearChart'), {
+    type: 'line',
+    data: yearData,
+    options: {scales: {y: {beginAtZero: true, max: 100}}}
+  });
+}
+// Country Chart
+const countryLabels = {{ country_chart|map(attribute='country')|list|tojson|safe }};
+const countryDataVals = {{ country_chart|map(attribute='avg')|list|tojson|safe }};
+const countryData = {
+  labels: countryLabels,
+  datasets: [{
+    label: 'Avg Rating',
+    data: countryDataVals,
+    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+    borderColor: 'rgba(75, 192, 192, 1)',
+    borderWidth: 1
+  }]
+};
+if (document.getElementById('countryChart')) {
+  new Chart(document.getElementById('countryChart'), {
+    type: 'bar',
+    data: countryData,
+    options: {scales: {y: {beginAtZero: true, max: 100}}}
+  });
+}
+</script>
 {% endblock %}
