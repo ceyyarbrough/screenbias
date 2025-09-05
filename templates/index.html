@@ -4,6 +4,7 @@
 #}
 {% extends "base.html" %}
 {% block content %}
+
 <h2>Newest Movies</h2>
 <div class="gallery-scroll">
   {% for movie in newest_movies %}
@@ -20,9 +21,9 @@
   {% endfor %}
 </div>
 
-<h2>Movies by Actor (Tom Hanks)</h2>
+<h2>Recently Reviewed Movies</h2>
 <div class="gallery-scroll">
-  {% for movie in actor_movies %}
+  {% for movie in recently_reviewed %}
     <div class="gallery-item">
       <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
         <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
@@ -31,74 +32,21 @@
           <div class="movie-year">Year: {{ movie.Year }}</div>
           <div class="movie-director">Director: {{ movie.Director if movie.Director is defined else 'N/A' }}</div>
         </div>
+        {% if movie.avg_rating is not none %}
+          {% set badge_color = 'badge-center' %}
+          {% if movie.avg_rating >= 66 %}
+            {% set badge_color = 'badge-right' %}
+          {% elif movie.avg_rating <= 33 %}
+            {% set badge_color = 'badge-left' %}
+          {% endif %}
+          <span class="badge {{ badge_color }}" style="margin-top: 6px;">Avg Score: {{ '%.1f' % movie.avg_rating }}</span>
+        {% endif %}
       </a>
     </div>
   {% endfor %}
 </div>
 
-<h2>Movies by Director (Christopher Nolan)</h2>
-<div class="gallery-scroll">
-  {% for movie in director_movies %}
-    <div class="gallery-item">
-      <a href="{{ url_for('movie_details', movie_id=movie.imdbID) }}" class="unstyled-link">
-        <img src="{{ movie.Poster if movie.Poster != 'N/A' else url_for('static', filename='no_poster.png') }}" alt="{{ movie.Title }}">
-        <div class="movie-title">{{ movie.Title }}</div>
-        <div class="movie-meta">
-          <div class="movie-year">Year: {{ movie.Year }}</div>
-          <div class="movie-director">Director: {{ movie.Director if movie.Director is defined else 'N/A' }}</div>
-        </div>
-      </a>
-    </div>
-  {% endfor %}
-</div>
 
-<style>
-.gallery-scroll {
-  display: flex;
-  overflow-x: auto;
-  gap: 16px;
-  padding: 10px 0 30px 0;
-  background: #dbeafe; /* Slightly darker blue background for gallery */
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
-}
-.gallery-item {
-  flex: 0 0 auto;
-  width: 150px;
-  text-align: center;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.12);
-  padding: 10px;
-  border: 2px solid #1976d2; /* More noticeable border */
-  margin: 4px 0;
-  transition: transform 0.18s cubic-bezier(.4,2,.6,1), box-shadow 0.18s cubic-bezier(.4,2,.6,1), border-color 0.18s;
-}
-.gallery-item:hover {
-  transform: scale(1.07);
-  box-shadow: 0 6px 18px rgba(25, 118, 210, 0.22);
-  border-color: #0d47a1;
-  z-index: 2;
-}
-.gallery-item a.unstyled-link {
-  text-decoration: none;
-  color: inherit;
-}
-.movie-meta {
-  margin-top: 8px;
-  border: 1.5px solid #1976d2;
-  border-radius: 6px;
-  background: #fafdff;
-  padding: 6px 8px;
-  font-size: 0.95em;
-  color: #1976d2;
-  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.07);
-}
-.movie-year, .movie-director {
-  margin-bottom: 2px;
-}
-.movie-year:last-child, .movie-director:last-child {
-  margin-bottom: 0;
-}
-</style>
+
+
 {% endblock %}

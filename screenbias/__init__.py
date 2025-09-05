@@ -6,7 +6,11 @@ from flask import Flask
 
 
 # Explicitly set the template folder to the project-level templates directory
-app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates'))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates'),
+    static_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static')
+)
 # Secret key for session management (should be changed in production)
 app.secret_key = 'API Key Goes Here'
 

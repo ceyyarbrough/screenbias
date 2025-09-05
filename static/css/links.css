@@ -1,0 +1,20 @@
+/* links.css - Plain link styling for login/register */
+
+.plain-link {
+  color: inherit !important;
+  text-decoration: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  padding: 0;
+}
+.plain-link:visited, .plain-link:active, .plain-link:focus {
+  color: inherit !important;
+  text-decoration: none !important;
+  outline: none;
+}
+.plain-link:hover {
+  color: #1976d2 !important;
+  text-decoration: underline !important;
+  background: none !important;
+}
