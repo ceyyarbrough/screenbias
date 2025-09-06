@@ -21,8 +21,31 @@ if OMDB_API_KEY == 'insecure-demo-key':
     warnings.warn('WARNING: Using insecure default OMDb API key! Set OMDB_API_KEY in your environment for production.')
 
 
+@cache.memoize(timeout=3600)  # Cache individual OMDB API requests for 1 hour
 def _cached_omdb_get(url):
     return requests.get(url).json()
+
+@cache.memoize(timeout=86400)  # Cache for 24 hours
+def _get_newest_movies(api_key):
+    """Fetch and cache newest movies for 24 hours"""
+    search_terms = ['the', 'a', 'of', 'in', 'on', 'and', 'to', 'for', 'with', 'by']
+    seen_ids = set()
+    newest_movies = []
+    for term in search_terms:
+        url = f"http://www.omdbapi.com/?apikey={api_key}&y=2025&type=movie&s={term}"
+        resp_json = _cached_omdb_get(url)
+        # OMDb returns up to 10 results per search term
+        results = resp_json.get('Search', [])
+        for m in results:
+            # Only add unique 2025 movies
+            if m.get('Year') == '2025' and m.get('imdbID') not in seen_ids:
+                newest_movies.append(m)
+                seen_ids.add(m.get('imdbID'))
+            if len(newest_movies) >= 10:
+                break
+        if len(newest_movies) >= 10:
+            break
+    return newest_movies
 
 # Home page route: displays movie galleries using OMDb API data
 @app.route('/')
@@ -40,24 +63,8 @@ def home():
     - Recently reviewed movies (last 10 unique movies with reviews, includes avg_rating)
     - Most reviewed movies (top 10 by number of reviews, includes avg_rating and review_count)
     """
-    # Fetch newest movies (2025 only) - OMDb API requires a more specific search term
-    search_terms = ['the', 'a', 'of', 'in', 'on', 'and', 'to', 'for', 'with', 'by']
-    seen_ids = set()
-    newest_movies = []
-    for term in search_terms:
-        url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&y=2025&type=movie&s={term}"
-        resp_json = _cached_omdb_get(url)
-        # OMDb returns up to 10 results per search term
-        results = resp_json.get('Search', [])
-        for m in results:
-            # Only add unique 2025 movies
-            if m.get('Year') == '2025' and m.get('imdbID') not in seen_ids:
-                newest_movies.append(m)
-                seen_ids.add(m.get('imdbID'))
-            if len(newest_movies) >= 10:
-                break
-        if len(newest_movies) >= 10:
-            break
+    # Fetch newest movies (cached for 24 hours)
+    newest_movies = _get_newest_movies(OMDB_API_KEY)
 
     # Fetch movies by actor (e.g., Tom Hanks)
     actor_url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&s=Tom%20Hanks&type=movie"
